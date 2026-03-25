@@ -263,14 +263,14 @@ body{
 }
 
 .search-header.searched{
-    top:48px;
-    left:50px;
+    top:56px;
+    left:40px;
     transform:none;
-    width:calc(100% - 56px);
+    width:calc(100% - 80px);
+    display:flex;
     flex-direction:row;
-    align-items:flex-start;
-    justify-content:flex-start;
-    gap:16px;
+    align-items:center;   /* 👈 핵심 (세로 중앙 정렬) */
+    gap:18px;
 }
 
 .logo-img{
@@ -294,7 +294,7 @@ body{
 
 .search-line{
     width:100%;
-    margin:0 auto;
+    margin-top:12px;
     display:flex;
     align-items:stretch;
     transition:width 0.8s cubic-bezier(.22,.8,.2,1);
@@ -359,9 +359,9 @@ body{
 
 .results-area{
     position:absolute;
-    top:160px;
-    left:28px;
-    right:28px;
+    top:182px;
+    left:120px;
+    right:40px;
     bottom:28px;
     overflow:auto;
     opacity:0;
