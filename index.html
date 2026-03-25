@@ -2,236 +2,476 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>복구복구 브라우저</title>
 
 <style>
-body{
+*{
+    box-sizing:border-box;
+}
+
+html,body{
     margin:0;
-    font-family:Arial;
+    width:100%;
+    height:100%;
+    font-family:Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
     overflow:hidden;
 }
 
-/* 공통 중앙 */
-.center{
-    position:absolute;
-    top:50%;
-    left:50%;
-    transform:translate(-50%,-50%);
+body{
+    background:#0a1420;
+}
+
+/* 공통 화면 */
+.screen{
+    position:fixed;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:opacity 1s ease, background-color 1.6s ease, color 1.2s ease;
+}
+
+.hidden{
+    opacity:0;
+    pointer-events:none;
+}
+
+.visible{
+    opacity:1;
+    pointer-events:auto;
+}
+
+.center-wrap{
+    width:100%;
+    max-width:980px;
+    padding:0 24px;
     text-align:center;
 }
 
-/* 첫 화면 */
+/* 시작 화면 */
 #start{
-    background:#0b1a2a;
-    width:100vw;
-    height:100vh;
-    color:white;
+    background:#091523;
+    color:#ffffff;
 }
 
-#title{
-    font-size:24px;
-    transition:0.5s;
+.start-title{
+    font-size:56px;
+    font-weight:800;
+    letter-spacing:-1.5px;
+    line-height:1.2;
+    opacity:1;
+    transform:translateY(0);
+    transition:
+        transform 0.9s cubic-bezier(.22,.8,.2,1),
+        opacity 0.9s ease;
 }
 
-#inputs{
-    margin-top:20px;
-    display:none;
+.start-title.moved{
+    transform:translateY(-42px);
 }
 
-.input-row{
+.form-area{
+    margin-top:24px;
+    opacity:0;
+    transform:translateY(16px);
+    transition:
+        opacity 0.8s ease,
+        transform 0.8s cubic-bezier(.22,.8,.2,1);
+    pointer-events:none;
+}
+
+.form-area.show{
+    opacity:1;
+    transform:translateY(0);
+    pointer-events:auto;
+}
+
+#inputList{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    margin-bottom:14px;
+}
+
+.name-input{
+    width:min(420px, 78vw);
+    height:52px;
+    padding:0 16px;
+    border:1px solid rgba(255,255,255,0.18);
+    border-radius:12px;
+    outline:none;
+    background:rgba(255,255,255,0.08);
+    color:#ffffff;
+    font-size:18px;
+    transition:border-color .25s ease, background .25s ease, box-shadow .25s ease;
+}
+
+.name-input::placeholder{
+    color:rgba(255,255,255,0.38);
+}
+
+.name-input:focus{
+    border-color:rgba(120,220,255,0.9);
+    background:rgba(255,255,255,0.12);
+    box-shadow:0 0 0 4px rgba(95,200,255,0.10);
+}
+
+.controls{
     display:flex;
     justify-content:center;
-    gap:5px;
-    margin-bottom:5px;
+    align-items:center;
+    gap:8px;
+    margin-top:4px;
 }
 
-.input-row input{
-    padding:10px;
-    width:200px;
-}
-
-.btn{
-    padding:10px;
+.ctrl-btn,
+.confirm-btn{
+    height:48px;
+    border:none;
+    border-radius:12px;
     cursor:pointer;
+    transition:transform .18s ease, opacity .18s ease, background .2s ease;
 }
 
-#msg{
-    font-size:12px;
-    color:#4fd1ff;
-    margin-top:5px;
+.ctrl-btn:active,
+.confirm-btn:active{
+    transform:scale(0.97);
+}
+
+.ctrl-btn{
+    width:48px;
+    font-size:24px;
+    font-weight:700;
+    background:rgba(255,255,255,0.14);
+    color:#ffffff;
+}
+
+.ctrl-btn:hover{
+    background:rgba(255,255,255,0.20);
+}
+
+.confirm-btn{
+    padding:0 22px;
+    font-size:16px;
+    font-weight:700;
+    background:#e9edf1;
+    color:#0f1e2f;
+}
+
+.confirm-btn:disabled{
+    opacity:.35;
+    cursor:default;
+}
+
+.message{
+    min-height:18px;
+    margin-top:10px;
+    font-size:13px;
+    color:#70d8ff;
+    letter-spacing:-0.2px;
 }
 
 /* 로딩 */
 #loading{
-    display:none;
-    background:#0b1a2a;
-    width:100vw;
-    height:100vh;
-    color:white;
+    background:#0b1827;
+    color:#ffffff;
+}
+
+.loading-text{
+    font-size:44px;
+    font-weight:800;
+    letter-spacing:-1px;
+    opacity:0;
+    transform:translateY(10px);
+    transition:opacity .8s ease, transform .8s ease;
+}
+
+.loading-text.show{
+    opacity:1;
+    transform:translateY(0);
 }
 
 /* 환영 */
 #welcome{
-    display:none;
-    background:white;
-    width:100vw;
-    height:100vh;
-    color:#0a1a3a;
-    font-size:40px;
+    background:#ffffff;
+    color:#13203a;
+    transition:opacity 1.2s ease, background-color 1.6s ease;
+}
+
+.welcome-text{
+    font-size:64px;
+    font-weight:900;
+    letter-spacing:-2px;
+    color:#13203a;
+    opacity:0;
+    transform:translateY(18px);
+    transition:
+        opacity 1s ease,
+        transform 1s cubic-bezier(.22,.8,.2,1),
+        filter 1s ease;
+}
+
+.welcome-text.show{
+    opacity:1;
+    transform:translateY(0);
+    filter:blur(0);
+}
+
+.welcome-text.fade-out{
+    opacity:0;
+    transform:translateY(-12px);
+    filter:blur(6px);
 }
 
 /* 메인 */
 #main{
-    display:none;
-    background:white;
-    width:100vw;
-    height:100vh;
+    background:#ffffff;
+    color:#111827;
+}
+
+.main-wrap{
+    width:100%;
+    max-width:980px;
+    padding:0 24px;
+    text-align:center;
+    transform:translateY(-66px);
+    opacity:0;
+    transition:opacity 1s ease, transform 1s cubic-bezier(.22,.8,.2,1);
+}
+
+.main-wrap.show{
+    opacity:1;
+    transform:translateY(-86px);
 }
 
 .logo-img{
     display:block;
-    margin:0 auto 20px;
-    width:clamp(140px, 22vw, 260px);
+    margin:0 auto 8px;
+    width:clamp(130px, 18vw, 220px);
     height:auto;
 }
 
-.search-box{
+.search-line{
+    width:min(720px, 90vw);
+    margin:0 auto;
     display:flex;
-    justify-content:center;
-    gap:10px;
+    align-items:stretch;
 }
 
-.search-box input{
-    width:60vw;
-    max-width:600px;
-    min-width:200px;
-    padding:12px;
-    border-radius:10px;
-    border:1px solid #ccc;
+.search-input{
+    flex:1;
+    height:56px;
+    padding:0 18px;
+    border:1px solid #4e5560;
+    border-right:none;
+    border-radius:16px 0 0 16px;
+    outline:none;
+    background:#4a515b;
+    color:#f5f7fa;
+    font-size:18px;
+    transition:background .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
 
-.search-box button{
-    padding:12px 20px;
+.search-input::placeholder{
+    color:#d7dde6;
+}
+
+.search-input:focus{
+    background:#434a53;
+    border-color:#39404a;
+    box-shadow:0 0 0 4px rgba(30,41,59,0.08);
+}
+
+.search-btn{
+    width:88px;
+    height:56px;
+    border:1px solid #4e5560;
+    border-radius:0 16px 16px 0;
+    background:#4a515b;
+    color:#f3f5f8;
+    font-size:16px;
+    font-weight:700;
     cursor:pointer;
+    transition:background .2s ease, border-color .2s ease, transform .18s ease;
+}
+
+.search-btn:hover{
+    background:#414852;
+    border-color:#40464f;
+}
+
+.search-btn:active{
+    transform:scale(0.98);
+}
+
+@media (max-width:640px){
+    .start-title{
+        font-size:36px;
+    }
+
+    .loading-text{
+        font-size:34px;
+    }
+
+    .welcome-text{
+        font-size:42px;
+    }
+
+    .main-wrap.show{
+        transform:translateY(-64px);
+    }
+
+    .search-input,
+    .search-btn{
+        height:50px;
+    }
+
+    .search-btn{
+        width:74px;
+        font-size:15px;
+    }
 }
 </style>
 </head>
-
 <body>
 
-<!-- 시작 -->
-<div id="start">
-    <div class="center">
-        <div id="title">탐정님의 성함을 입력해주세요</div>
+<div id="start" class="screen visible">
+    <div class="center-wrap">
+        <div id="startTitle" class="start-title">탐정님의 성함을 입력해주세요</div>
 
-        <div id="inputs">
+        <div id="formArea" class="form-area">
             <div id="inputList"></div>
 
-            <div>
-                <button class="btn" onclick="addInput()">+</button>
-                <button class="btn" onclick="removeInput()">-</button>
-                <button class="btn" id="confirm" onclick="confirmNames()" disabled>확인</button>
+            <div class="controls">
+                <button class="ctrl-btn" type="button" onclick="addInput()">+</button>
+                <button class="ctrl-btn" type="button" onclick="removeInput()">−</button>
+                <button id="confirmBtn" class="confirm-btn" type="button" onclick="confirmNames()" disabled>확인</button>
             </div>
 
-            <div id="msg"></div>
+            <div id="message" class="message"></div>
         </div>
     </div>
 </div>
 
-<!-- 로딩 -->
-<div id="loading">
-    <div class="center">확인중...</div>
+<div id="loading" class="screen hidden">
+    <div id="loadingText" class="loading-text">확인중...</div>
 </div>
 
-<!-- 환영 -->
-<div id="welcome">
-    <div class="center" id="welcomeText">환영합니다, 탐정님</div>
+<div id="welcome" class="screen hidden">
+    <div id="welcomeText" class="welcome-text">환영합니다, 탐정님</div>
 </div>
 
-<!-- 메인 -->
-<div id="main">
-    <div class="center">
+<div id="main" class="screen hidden">
+    <div id="mainWrap" class="main-wrap">
         <img src="logo.png" alt="복구복구 로고" class="logo-img">
-        <div class="search-box">
-            <input type="text" placeholder="검색">
-            <button>검색</button>
+        <div class="search-line">
+            <input class="search-input" type="text" placeholder="검색">
+            <button class="search-btn" type="button">검색</button>
         </div>
     </div>
 </div>
 
 <script>
-let inputCount = 0;
+const start = document.getElementById("start");
+const loading = document.getElementById("loading");
+const welcome = document.getElementById("welcome");
+const main = document.getElementById("main");
+
+const startTitle = document.getElementById("startTitle");
+const formArea = document.getElementById("formArea");
+const inputList = document.getElementById("inputList");
+const confirmBtn = document.getElementById("confirmBtn");
+const message = document.getElementById("message");
+const loadingText = document.getElementById("loadingText");
+const welcomeText = document.getElementById("welcomeText");
+const mainWrap = document.getElementById("mainWrap");
+
+function showScreen(screen){
+    [start, loading, welcome, main].forEach(s=>{
+        s.classList.remove("visible");
+        s.classList.add("hidden");
+    });
+    screen.classList.remove("hidden");
+    screen.classList.add("visible");
+}
 
 function createInput(){
-    const div = document.createElement("div");
-    div.className="input-row";
-
     const input = document.createElement("input");
-    input.oninput = checkInputs;
-
-    div.appendChild(input);
-    document.getElementById("inputList").appendChild(div);
+    input.type = "text";
+    input.className = "name-input";
+    input.placeholder = "이름 입력";
+    input.addEventListener("input", checkInputs);
+    inputList.appendChild(input);
 }
 
 function addInput(){
-    inputCount++;
     createInput();
     checkInputs();
 }
 
 function removeInput(){
-    if(inputCount<=1) return;
-    const list = document.getElementById("inputList");
-    list.removeChild(list.lastChild);
-    inputCount--;
+    const inputs = inputList.querySelectorAll("input");
+    if(inputs.length <= 1) return;
+    inputList.removeChild(inputList.lastElementChild);
     checkInputs();
 }
 
 function checkInputs(){
-    const inputs = document.querySelectorAll("#inputList input");
-    let filled = true;
-    let emptyAll = true;
+    const inputs = inputList.querySelectorAll("input");
+    let allFilled = inputs.length > 0;
+    let allEmpty = true;
 
-    inputs.forEach(i=>{
-        if(i.value==="") filled=false;
-        else emptyAll=false;
+    inputs.forEach(input=>{
+        const value = input.value.trim();
+        if(value === ""){
+            allFilled = false;
+        }else{
+            allEmpty = false;
+        }
     });
 
-    document.getElementById("confirm").disabled = !filled;
-
-    if(emptyAll){
-        document.getElementById("msg").innerText="이름을 입력해주세요.";
-    }else{
-        document.getElementById("msg").innerText="";
-    }
+    confirmBtn.disabled = !allFilled;
+    message.textContent = allEmpty ? "이름을 입력해주세요." : "";
 }
 
 function confirmNames(){
-    document.getElementById("start").style.display="none";
-    document.getElementById("loading").style.display="block";
+    showScreen(loading);
+
+    requestAnimationFrame(()=>{
+        loadingText.classList.add("show");
+    });
 
     setTimeout(()=>{
-        document.getElementById("loading").style.display="none";
-        document.getElementById("welcome").style.display="block";
+        loadingText.classList.remove("show");
+        loading.style.backgroundColor = "#ffffff";
 
         setTimeout(()=>{
-            document.getElementById("welcomeText").style.opacity="0";
-        },2000);
+            showScreen(welcome);
+            requestAnimationFrame(()=>{
+                welcomeText.classList.add("show");
+            });
 
-        setTimeout(()=>{
-            document.getElementById("welcome").style.display="none";
-            document.getElementById("main").style.display="block";
-        },3000);
+            setTimeout(()=>{
+                welcomeText.classList.add("fade-out");
+            }, 3000);
 
-    },1500);
+            setTimeout(()=>{
+                showScreen(main);
+                requestAnimationFrame(()=>{
+                    mainWrap.classList.add("show");
+                });
+            }, 4100);
+        }, 700);
+    }, 1600);
 }
 
-/* 초기 */
 setTimeout(()=>{
-    document.getElementById("title").style.transform="translateY(-30px)";
-    document.getElementById("inputs").style.display="block";
+    startTitle.classList.add("moved");
+    formArea.classList.add("show");
     addInput();
-},1000);
+}, 900);
 </script>
 
 </body>
