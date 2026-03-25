@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>복구복구 브라우저</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    overflow:hidden;
+}
+
+/* 공통 중앙 */
+.center{
+    position:absolute;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    text-align:center;
+}
+
+/* 첫 화면 */
+#start{
+    background:#0b1a2a;
+    width:100vw;
+    height:100vh;
+    color:white;
+}
+
+#title{
+    font-size:24px;
+    transition:0.5s;
+}
+
+#inputs{
+    margin-top:20px;
+    display:none;
+}
+
+.input-row{
+    display:flex;
+    justify-content:center;
+    gap:5px;
+    margin-bottom:5px;
+}
+
+.input-row input{
+    padding:10px;
+    width:200px;
+}
+
+.btn{
+    padding:10px;
+    cursor:pointer;
+}
+
+#msg{
+    font-size:12px;
+    color:#4fd1ff;
+    margin-top:5px;
+}
+
+/* 로딩 */
+#loading{
+    display:none;
+    background:#0b1a2a;
+    width:100vw;
+    height:100vh;
+    color:white;
+}
+
+/* 환영 */
+#welcome{
+    display:none;
+    background:white;
+    width:100vw;
+    height:100vh;
+    color:#0a1a3a;
+    font-size:40px;
+}
+
+/* 메인 */
+#main{
+    display:none;
+    background:white;
+    width:100vw;
+    height:100vh;
+}
+
+.logo-img{
+    display:block;
+    margin:0 auto 20px;
+    width:clamp(140px, 22vw, 260px);
+    height:auto;
+}
+
+.search-box{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+}
+
+.search-box input{
+    width:60vw;
+    max-width:600px;
+    min-width:200px;
+    padding:12px;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
+.search-box button{
+    padding:12px 20px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- 시작 -->
+<div id="start">
+    <div class="center">
+        <div id="title">탐정님의 성함을 입력해주세요</div>
+
+        <div id="inputs">
+            <div id="inputList"></div>
+
+            <div>
+                <button class="btn" onclick="addInput()">+</button>
+                <button class="btn" onclick="removeInput()">-</button>
+                <button class="btn" id="confirm" onclick="confirmNames()" disabled>확인</button>
+            </div>
+
+            <div id="msg"></div>
+        </div>
+    </div>
+</div>
+
+<!-- 로딩 -->
+<div id="loading">
+    <div class="center">확인중...</div>
+</div>
+
+<!-- 환영 -->
+<div id="welcome">
+    <div class="center" id="welcomeText">환영합니다, 탐정님</div>
+</div>
+
+<!-- 메인 -->
+<div id="main">
+    <div class="center">
+        <img src="logo.png" alt="복구복구 로고" class="logo-img">
+        <div class="search-box">
+            <input type="text" placeholder="검색">
+            <button>검색</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let inputCount = 0;
+
+function createInput(){
+    const div = document.createElement("div");
+    div.className="input-row";
+
+    const input = document.createElement("input");
+    input.oninput = checkInputs;
+
+    div.appendChild(input);
+    document.getElementById("inputList").appendChild(div);
+}
+
+function addInput(){
+    inputCount++;
+    createInput();
+    checkInputs();
+}
+
+function removeInput(){
+    if(inputCount<=1) return;
+    const list = document.getElementById("inputList");
+    list.removeChild(list.lastChild);
+    inputCount--;
+    checkInputs();
+}
+
+function checkInputs(){
+    const inputs = document.querySelectorAll("#inputList input");
+    let filled = true;
+    let emptyAll = true;
+
+    inputs.forEach(i=>{
+        if(i.value==="") filled=false;
+        else emptyAll=false;
+    });
+
+    document.getElementById("confirm").disabled = !filled;
+
+    if(emptyAll){
+        document.getElementById("msg").innerText="이름을 입력해주세요.";
+    }else{
+        document.getElementById("msg").innerText="";
+    }
+}
+
+function confirmNames(){
+    document.getElementById("start").style.display="none";
+    document.getElementById("loading").style.display="block";
+
+    setTimeout(()=>{
+        document.getElementById("loading").style.display="none";
+        document.getElementById("welcome").style.display="block";
+
+        setTimeout(()=>{
+            document.getElementById("welcomeText").style.opacity="0";
+        },2000);
+
+        setTimeout(()=>{
+            document.getElementById("welcome").style.display="none";
+            document.getElementById("main").style.display="block";
+        },3000);
+
+    },1500);
+}
+
+/* 초기 */
+setTimeout(()=>{
+    document.getElementById("title").style.transform="translateY(-30px)";
+    document.getElementById("inputs").style.display="block";
+    addInput();
+},1000);
+</script>
+
+</body>
+</html>
