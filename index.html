@@ -248,8 +248,8 @@ body{
 
 .logo-img{
     display:block;
-    margin:0 auto 8px;
-    width:clamp(130px, 18vw, 220px);
+    margin:0 auto 4px;   /* 간격 확 줄임 */
+    width:clamp(160px, 22vw, 260px); /* 살짝 더 큼 */
     height:auto;
 }
 
@@ -264,18 +264,17 @@ body{
     flex:1;
     height:56px;
     padding:0 18px;
-    border:1px solid #4e5560;
+    border:1px solid #d0d5dc;
     border-right:none;
     border-radius:16px 0 0 16px;
     outline:none;
-    background:#4a515b;
-    color:#f5f7fa;
+    background:#ffffff;   /* 하얀색 */
+    color:#111;           /* 글씨 어둡게 */
     font-size:18px;
-    transition:background .2s ease, border-color .2s ease, box-shadow .2s ease;
 }
 
 .search-input::placeholder{
-    color:#d7dde6;
+    color:#9aa3af;
 }
 
 .search-input:focus{
@@ -285,21 +284,21 @@ body{
 }
 
 .search-btn{
-    width:88px;
+    width:90px;
     height:56px;
-    border:1px solid #4e5560;
+    border:1px solid #1f2a3a;
     border-radius:0 16px 16px 0;
-    background:#4a515b;
-    color:#f3f5f8;
+    background:#1f2a3a;   /* 검푸른색 */
+    color:white;
     font-size:16px;
     font-weight:700;
     cursor:pointer;
-    transition:background .2s ease, border-color .2s ease, transform .18s ease;
+    transition:all .2s ease;
 }
 
 .search-btn:hover{
-    background:#414852;
-    border-color:#40464f;
+    background:#273447;
+    border-color:#273447;
 }
 
 .search-btn:active{
@@ -367,7 +366,7 @@ body{
     <div id="mainWrap" class="main-wrap">
         <img src="logo.png" alt="복구복구 로고" class="logo-img">
         <div class="search-line">
-            <input class="search-input" type="text" placeholder="검색">
+            <input class="search-input" type="text" placeholder="검색어를 입력해주세요.">
             <button class="search-btn" type="button">검색</button>
         </div>
     </div>
