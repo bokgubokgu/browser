@@ -186,7 +186,10 @@ function escapeHtml(text){
         .replaceAll("'", "&#39;");
 }
 
-searchBtn.addEventListener("click", performSearch);
+searchBtn.addEventListener("mousedown", (e) => {
+    e.preventDefault();
+    performSearch();
+});
 
 searchInput.addEventListener("keydown", (e) => {
     if(e.key === "Enter"){
