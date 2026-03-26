@@ -522,6 +522,7 @@ body{
 
     .logo-img{
         width:clamp(150px, 38vw, 220px);
+        cursor:pointer;
     }
 
     .search-input,
@@ -592,7 +593,7 @@ body{
 <div id="main" class="screen hidden">
     <div id="mainWrap" class="main-wrap">
         <div id="searchHeader" class="search-header">
-            <img src="logo.png" alt="복구복구 로고" class="logo-img">
+            <img id="logoBtn" src="logo.png" alt="복구복구 로고" class="logo-img">
             <div class="search-line">
                 <input id="searchInput" class="search-input" type="text" placeholder="검색어를 입력해주세요.">
                 <button id="searchBtn" class="search-btn" type="button">검색</button>
