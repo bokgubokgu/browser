@@ -20,6 +20,7 @@ const detailView = document.getElementById("detailView");
 const detailTitle = document.getElementById("detailTitle");
 const detailBody = document.getElementById("detailBody");
 const backBtn = document.getElementById("backBtn");
+const logoBtn = document.getElementById("logoBtn");
 
 let currentResults = [];
 let lastQuery = "";
@@ -186,6 +187,13 @@ function escapeHtml(text){
         .replaceAll("'", "&#39;");
 }
 
+function goToMainSearch(){
+    detailView.classList.remove("show");
+    resultsArea.classList.remove("show");
+    searchHeader.classList.remove("searched");
+    searchInput.value = "";
+}
+
 searchBtn.addEventListener("mousedown", (e) => {
     e.preventDefault();
     performSearch();
@@ -204,3 +212,5 @@ setTimeout(() => {
     formArea.classList.add("show");
     addInput();
 }, 900);
+
+logoBtn.addEventListener("click", goToMainSearch);
