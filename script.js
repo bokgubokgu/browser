@@ -24,13 +24,27 @@ const logoBtn = document.getElementById("logoBtn");
 
 const requestBox = document.getElementById("requestBox");
 const requestSummary = document.getElementById("requestSummary");
-const requestList = document.getElementById("requestList");
-const requestItems = document.querySelectorAll(".request-item");
+const requestCards = document.getElementById("requestCards");
+const requestCardItems = document.querySelectorAll(".request-card");
+
+const requestDetail = document.getElementById("requestDetail");
+const requestDetailTitle = document.getElementById("requestDetailTitle");
+const requestDetailBody = document.getElementById("requestDetailBody");
+const requestBackBtn = document.getElementById("requestBackBtn");
+const requestAcceptBtn = document.getElementById("requestAcceptBtn");
 
 const selectedRequest = document.getElementById("selectedRequest");
 const selectedRequestBtn = document.getElementById("selectedRequestBtn");
 
 let currentRoute = null;
+
+let pendingRoute = null;
+
+const requestInfo = {
+    "의뢰1": "의뢰1의 상세 설명입니다.\n여기에 길게 의뢰 내용을 적으면 됨.",
+    "의뢰2": "의뢰2의 상세 설명입니다.\n여기에 길게 의뢰 내용을 적으면 됨.",
+    "의뢰3": "의뢰3의 상세 설명입니다.\n여기에 길게 의뢰 내용을 적으면 됨."
+};
 
 let currentResults = [];
 let lastQuery = "";
@@ -203,10 +217,12 @@ function escapeHtml(text){
 function goToMainSearch(){
     detailView.classList.remove("show");
     resultsArea.classList.remove("show");
+    requestDetail.classList.add("hidden");
+    requestCards.classList.add("hidden");
     searchHeader.classList.remove("searched");
-    requestList.classList.add("hidden");
     searchInput.value = "";
     lastQuery = "";
+    pendingRoute = null;
 
     if(currentRoute){
         applySelectedRoute(currentRoute);
@@ -231,17 +247,9 @@ function saveSelectedRoute(){
 function applySelectedRoute(route){
     currentRoute = route;
 
-    requestItems.forEach(item => {
-        item.classList.remove("active");
-        if(item.dataset.route === route){
-            item.classList.add("active");
-        }
-    });
-
     if(route){
         selectedRequestBtn.textContent = route;
         selectedRequest.classList.remove("hidden");
-        requestList.classList.add("hidden");
     }else{
         selectedRequest.classList.add("hidden");
         selectedRequestBtn.textContent = "";
@@ -254,9 +262,11 @@ function goDirectToMain(){
     searchHeader.classList.remove("searched");
     resultsArea.classList.remove("show");
     detailView.classList.remove("show");
-    requestList.classList.add("hidden");
+    requestCards.classList.add("hidden");
+    requestDetail.classList.add("hidden");
     searchInput.value = "";
     lastQuery = "";
+    pendingRoute = null;
 }
 
 searchBtn.addEventListener("mousedown", (e) => {
@@ -270,6 +280,27 @@ searchInput.addEventListener("keydown", (e) => {
     }
 });
 
+function openRequestCards(){
+    requestDetail.classList.add("hidden");
+    requestCards.classList.toggle("hidden");
+}
+
+function openRequestDetail(route){
+    pendingRoute = route;
+    requestCards.classList.add("hidden");
+    requestDetailTitle.textContent = route;
+    requestDetailBody.textContent = requestInfo[route] || "임시 의뢰 내용입니다.";
+    requestDetail.classList.remove("hidden");
+}
+
+function acceptRequest(){
+    if(!pendingRoute) return;
+    applySelectedRoute(pendingRoute);
+    saveSelectedRoute();
+    requestDetail.classList.add("hidden");
+    searchInput.focus();
+}
+
 backBtn.addEventListener("click", goBackToResults);
 
 window.addEventListener("load", () => {
@@ -282,6 +313,8 @@ window.addEventListener("load", () => {
         if(savedRoute){
             applySelectedRoute(savedRoute);
         }
+        requestCards.classList.add("hidden");
+        requestDetail.classList.add("hidden");
 
         return;
     }
@@ -294,21 +327,24 @@ window.addEventListener("load", () => {
 });
 
 
-requestSummary.addEventListener("click", () => {
-    requestList.classList.toggle("hidden");
-});
+requestSummary.addEventListener("click", openRequestCards);
 
-requestItems.forEach(item => {
+requestCardItems.forEach(item => {
     item.addEventListener("click", () => {
-        applySelectedRoute(item.dataset.route);
-        saveSelectedRoute();
-        searchInput.focus();
+        openRequestDetail(item.dataset.route);
     });
 });
 
+requestBackBtn.addEventListener("click", () => {
+    requestDetail.classList.add("hidden");
+    requestCards.classList.remove("hidden");
+});
+
+requestAcceptBtn.addEventListener("click", acceptRequest);
+
 selectedRequestBtn.addEventListener("click", () => {
-    selectedRequest.classList.add("hidden");
-    requestList.classList.remove("hidden");
+    requestCards.classList.remove("hidden");
+    requestDetail.classList.add("hidden");
 });
 
 logoBtn.addEventListener("click", goToMainSearch);
