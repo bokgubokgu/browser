@@ -28,6 +28,9 @@ const requestList = document.getElementById("requestList");
 const requestItems = document.querySelectorAll(".request-item");
 const logoBtn = document.querySelector(".logo-img");
 
+const selectedRequest = document.getElementById("selectedRequest");
+const selectedRequestBtn = document.getElementById("selectedRequestBtn");
+
 let currentRoute = null;
 
 let currentResults = [];
@@ -200,17 +203,16 @@ function goToMainSearch(){
     detailView.classList.remove("show");
     resultsArea.classList.remove("show");
     searchHeader.classList.remove("searched");
+    requestList.classList.add("hidden");
     searchInput.value = "";
-    detailView.classList.remove("show");
-resultsArea.classList.remove("show");
-searchHeader.classList.remove("searched");
-requestList.classList.add("hidden");
-searchInput.value = "";
-lastQuery = "";
-currentRoute = null;
+    lastQuery = "";
 
-requestItems.forEach(item => item.classList.remove("active"));
-requestBox.classList.remove("hidden-box");
+    requestItems.forEach(item => item.classList.remove("active"));
+    requestBox.classList.remove("hidden-box");
+
+    if(currentRoute){
+        applySelectedRoute(currentRoute);
+    }
 }
 
 function getCurrentArticles(){
@@ -218,6 +220,34 @@ function getCurrentArticles(){
     if(currentRoute === "의뢰2") return route2Articles;
     if(currentRoute === "의뢰3") return route3Articles;
     return [];
+}
+
+function saveSelectedRoute(){
+    if(currentRoute){
+        sessionStorage.setItem("bokguSelectedRoute", currentRoute);
+    }else{
+        sessionStorage.removeItem("bokguSelectedRoute");
+    }
+}
+
+function applySelectedRoute(route){
+    currentRoute = route;
+
+    requestItems.forEach(item => {
+        item.classList.remove("active");
+        if(item.dataset.route === route){
+            item.classList.add("active");
+        }
+    });
+
+    if(route){
+        selectedRequestBtn.textContent = route;
+        selectedRequest.classList.remove("hidden");
+        requestList.classList.add("hidden");
+    }else{
+        selectedRequest.classList.add("hidden");
+        selectedRequestBtn.textContent = "";
+    }
 }
 
 searchBtn.addEventListener("mousedown", (e) => {
@@ -247,14 +277,15 @@ requestSummary.addEventListener("click", () => {
 
 requestItems.forEach(item => {
     item.addEventListener("click", () => {
-        currentRoute = item.dataset.route;
-
-        requestItems.forEach(btn => btn.classList.remove("active"));
-        item.classList.add("active");
-
-        requestList.classList.add("hidden");
+        applySelectedRoute(item.dataset.route);
+        saveSelectedRoute();
         searchInput.focus();
     });
+});
+
+selectedRequestBtn.addEventListener("click", () => {
+    selectedRequest.classList.add("hidden");
+    requestList.classList.remove("hidden");
 });
 
 logoBtn.addEventListener("click", goToMainSearch);
