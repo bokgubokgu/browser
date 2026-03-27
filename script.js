@@ -22,6 +22,14 @@ const detailBody = document.getElementById("detailBody");
 const backBtn = document.getElementById("backBtn");
 const logoBtn = document.getElementById("logoBtn");
 
+const requestBox = document.getElementById("requestBox");
+const requestSummary = document.getElementById("requestSummary");
+const requestList = document.getElementById("requestList");
+const requestItems = document.querySelectorAll(".request-item");
+const logoBtn = document.querySelector(".logo-img");
+
+let currentRoute = null;
+
 let currentResults = [];
 let lastQuery = "";
 
@@ -144,14 +152,15 @@ function renderResults(list){
 function performSearch(){
     const query = searchInput.value.trim();
     if(query === "") return;
+    if(!currentRoute) return;
 
     lastQuery = query;
 
     searchHeader.classList.add("searched");
     detailView.classList.remove("show");
 
-    currentResults = articles.filter(article => matchesQuery(article, query));
-
+    const currentArticles = getCurrentArticles();
+currentResults = currentArticles.filter(article => matchesQuery(article, query));
     renderResults(currentResults);
 
     requestAnimationFrame(() => {
@@ -192,6 +201,23 @@ function goToMainSearch(){
     resultsArea.classList.remove("show");
     searchHeader.classList.remove("searched");
     searchInput.value = "";
+    detailView.classList.remove("show");
+resultsArea.classList.remove("show");
+searchHeader.classList.remove("searched");
+requestList.classList.add("hidden");
+searchInput.value = "";
+lastQuery = "";
+currentRoute = null;
+
+requestItems.forEach(item => item.classList.remove("active"));
+requestBox.classList.remove("hidden-box");
+}
+
+function getCurrentArticles(){
+    if(currentRoute === "의뢰1") return route1Articles;
+    if(currentRoute === "의뢰2") return route2Articles;
+    if(currentRoute === "의뢰3") return route3Articles;
+    return [];
 }
 
 searchBtn.addEventListener("mousedown", (e) => {
@@ -212,5 +238,23 @@ setTimeout(() => {
     formArea.classList.add("show");
     addInput();
 }, 900);
+
+logoBtn.addEventListener("click", goToMainSearch);
+
+requestSummary.addEventListener("click", () => {
+    requestList.classList.toggle("hidden");
+});
+
+requestItems.forEach(item => {
+    item.addEventListener("click", () => {
+        currentRoute = item.dataset.route;
+
+        requestItems.forEach(btn => btn.classList.remove("active"));
+        item.classList.add("active");
+
+        requestList.classList.add("hidden");
+        searchInput.focus();
+    });
+});
 
 logoBtn.addEventListener("click", goToMainSearch);
