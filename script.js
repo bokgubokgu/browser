@@ -175,6 +175,7 @@ function performSearch(){
     lastQuery = query;
 
     searchHeader.classList.add("searched");
+    selectedRequest.classList.add("hidden");
     detailView.classList.remove("show");
 
     const currentArticles = getCurrentArticles();
