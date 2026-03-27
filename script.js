@@ -26,7 +26,6 @@ const requestBox = document.getElementById("requestBox");
 const requestSummary = document.getElementById("requestSummary");
 const requestList = document.getElementById("requestList");
 const requestItems = document.querySelectorAll(".request-item");
-const logoBtn = document.querySelector(".logo-img");
 
 const selectedRequest = document.getElementById("selectedRequest");
 const selectedRequestBtn = document.getElementById("selectedRequestBtn");
@@ -108,6 +107,8 @@ function confirmNames(){
             }, 3000);
 
             setTimeout(() => {
+                sessionStorage.setItem("visitedBrowserMain", "true");
+                
                 showScreen(main);
 
                 requestAnimationFrame(() => {
@@ -207,9 +208,6 @@ function goToMainSearch(){
     searchInput.value = "";
     lastQuery = "";
 
-    requestItems.forEach(item => item.classList.remove("active"));
-    requestBox.classList.remove("hidden-box");
-
     if(currentRoute){
         applySelectedRoute(currentRoute);
     }
@@ -250,6 +248,17 @@ function applySelectedRoute(route){
     }
 }
 
+function goDirectToMain(){
+    showScreen(main);
+    mainWrap.classList.add("show");
+    searchHeader.classList.remove("searched");
+    resultsArea.classList.remove("show");
+    detailView.classList.remove("show");
+    requestList.classList.add("hidden");
+    searchInput.value = "";
+    lastQuery = "";
+}
+
 searchBtn.addEventListener("mousedown", (e) => {
     e.preventDefault();
     performSearch();
@@ -263,13 +272,27 @@ searchInput.addEventListener("keydown", (e) => {
 
 backBtn.addEventListener("click", goBackToResults);
 
-setTimeout(() => {
-    startTitle.classList.add("moved");
-    formArea.classList.add("show");
-    addInput();
-}, 900);
+window.addEventListener("load", () => {
+    const visited = sessionStorage.getItem("visitedBrowserMain");
+    const savedRoute = sessionStorage.getItem("bokguSelectedRoute");
 
-logoBtn.addEventListener("click", goToMainSearch);
+    if(visited === "true"){
+        goDirectToMain();
+
+        if(savedRoute){
+            applySelectedRoute(savedRoute);
+        }
+
+        return;
+    }
+
+    setTimeout(() => {
+        startTitle.classList.add("moved");
+        formArea.classList.add("show");
+        addInput();
+    }, 900);
+});
+
 
 requestSummary.addEventListener("click", () => {
     requestList.classList.toggle("hidden");
