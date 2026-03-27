@@ -13,7 +13,8 @@ html, body{
     margin:0;
     width:100%;
     height:100%;
-    overflow:hidden;
+    overflow-x:hidden;
+    overflow-y:auto;
     font-family:Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
 }
 
@@ -230,6 +231,8 @@ body{
     color:#111827;
     align-items:flex-start;
     justify-content:flex-start;
+    overflow-y:auto;
+    overflow-x:hidden;
 }
 
 .main-wrap{
@@ -238,6 +241,7 @@ body{
     position:relative;
     opacity:0;
     transition:opacity 1s ease;
+    padding-bottom:80px;
 }
 
 .main-wrap.show{
@@ -491,7 +495,7 @@ body{
 .request-box{
     position:absolute;
     left:50%;
-    top:53%;
+    top:calc(53% + 110px);   /* 검색창 아래로 내림 */
     transform:translateX(-50%);
     width:min(760px, 90vw);
     text-align:center;
@@ -610,7 +614,7 @@ body{
 }
 
 .search-header.searched + .request-box{
-    top:118px;
+    top:130px;
     left:40px;
     transform:none;
     width:min(220px, calc(100vw - 80px));
