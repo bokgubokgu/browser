@@ -488,6 +488,100 @@ body{
     color:#7f8a99;
 }
 
+.request-box{
+    position:absolute;
+    left:50%;
+    top:52%;
+    transform:translateX(-50%);
+    width:min(760px, 90vw);
+    text-align:center;
+    transition:
+        opacity 0.4s ease,
+        transform 0.4s ease,
+        top 0.8s cubic-bezier(.22,.8,.2,1);
+}
+
+.request-box.hidden-box{
+    opacity:0;
+    pointer-events:none;
+}
+
+.request-summary{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:11px 16px;
+    background:#eef2f7;
+    border:1px solid #dde4ec;
+    border-radius:10px;
+    font-size:14px;
+    color:#1f2a3a;
+    cursor:pointer;
+}
+
+.request-list{
+    margin-top:12px;
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    opacity:1;
+    transform:translateY(0);
+    transition:opacity 0.3s ease, transform 0.3s ease;
+}
+
+.request-list.hidden{
+    display:none;
+}
+
+.request-item{
+    border:none;
+    background:#223149;
+    color:#ffffff;
+    font-size:13px;
+    font-weight:700;
+    padding:9px 14px;
+    border-radius:8px;
+    cursor:pointer;
+}
+
+.request-item:hover{
+    background:#2b3c58;
+}
+
+.request-item.active{
+    background:#0f1b2d;
+}
+
+.search-header.searched + .request-box{
+    top:118px;
+    left:40px;
+    transform:none;
+    width:auto;
+    text-align:left;
+}
+
+@media (max-width:640px){
+    .request-box{
+        top:50%;
+        width:calc(100% - 32px);
+    }
+
+    .search-header.searched + .request-box{
+        top:92px;
+        left:16px;
+    }
+
+    .request-summary{
+        font-size:13px;
+        padding:10px 12px;
+    }
+
+    .request-list{
+        justify-content:flex-start;
+        flex-wrap:wrap;
+    }
+}
+
 @media (max-width:640px){
     .start-title{
         font-size:40px;
@@ -600,6 +694,19 @@ body{
             </div>
         </div>
 
+        <div id="requestBox" class="request-box">
+    <div id="requestSummary" class="request-summary">
+        <span class="bell">🔔</span>
+        의뢰가 세 건 접수되었습니다.
+    </div>
+
+    <div id="requestList" class="request-list hidden">
+        <button class="request-item" type="button" data-route="의뢰1">의뢰1</button>
+        <button class="request-item" type="button" data-route="의뢰2">의뢰2</button>
+        <button class="request-item" type="button" data-route="의뢰3">의뢰3</button>
+    </div>
+</div>
+        
         <div id="resultsArea" class="results-area"></div>
 
         <div id="detailView" class="detail-view">
@@ -614,7 +721,9 @@ body{
     </div>
 </div>
 
-<script src="articles.js"></script>
+<script src="route1.js"></script>
+<script src="route2.js"></script>
+<script src="route3.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
