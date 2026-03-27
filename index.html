@@ -491,7 +491,7 @@ body{
 .request-box{
     position:absolute;
     left:50%;
-    top:52%;
+    top:53%;
     transform:translateX(-50%);
     width:min(760px, 90vw);
     text-align:center;
@@ -499,11 +499,6 @@ body{
         opacity 0.4s ease,
         transform 0.4s ease,
         top 0.8s cubic-bezier(.22,.8,.2,1);
-}
-
-.request-box.hidden-box{
-    opacity:0;
-    pointer-events:none;
 }
 
 .request-summary{
@@ -519,74 +514,136 @@ body{
     cursor:pointer;
 }
 
-.request-list{
-    margin-top:12px;
+.request-cards{
+    margin-top:18px;
     display:flex;
-    justify-content:center;
-    gap:10px;
-    opacity:1;
-    transform:translateY(0);
-    transition:opacity 0.3s ease, transform 0.3s ease;
+    flex-direction:column;
+    gap:14px;
 }
 
-.request-list.hidden{
+.request-cards.hidden,
+.request-detail.hidden,
+.selected-request.hidden{
     display:none;
 }
 
-.request-item{
+.request-card{
+    width:100%;
+    background:#ffffff;
+    border:1px solid #e4e8ee;
+    border-radius:12px;
+    padding:22px 24px;
+    text-align:left;
+    box-shadow:0 10px 30px rgba(16,24,40,0.04);
+    cursor:pointer;
+    transition:
+        transform .22s ease,
+        box-shadow .22s ease,
+        border-color .22s ease;
+}
+
+.request-card:hover{
+    transform:translateX(4px);
+    border-color:#d6dde6;
+    box-shadow:0 14px 34px rgba(16,24,40,0.07);
+}
+
+.request-card-title{
+    font-size:24px;
+    font-weight:800;
+    color:#16233d;
+    margin-bottom:10px;
+    letter-spacing:-0.5px;
+}
+
+.request-card-preview{
+    font-size:14px;
+    line-height:1.65;
+    color:#7f8a99;
+}
+
+.request-detail{
+    margin-top:18px;
+}
+
+.request-detail-inner{
+    width:100%;
+    text-align:left;
+}
+
+.request-accept-btn{
+    margin-top:24px;
+    height:48px;
+    padding:0 18px;
+    border:none;
+    border-radius:10px;
+    background:#223149;
+    color:#ffffff;
+    font-size:15px;
+    font-weight:800;
+    cursor:pointer;
+    transition:background .2s ease, transform .18s ease;
+}
+
+.request-accept-btn:hover{
+    background:#2a3a53;
+}
+
+.request-accept-btn:active{
+    transform:scale(0.98);
+}
+
+.selected-request{
+    margin-top:16px;
+    text-align:center;
+}
+
+.request-selected-chip{
     border:none;
     background:#223149;
     color:#ffffff;
-    font-size:13px;
-    font-weight:700;
-    padding:9px 14px;
-    border-radius:8px;
+    font-size:14px;
+    font-weight:800;
+    padding:10px 16px;
+    border-radius:10px;
     cursor:pointer;
-}
-
-.request-item:hover{
-    background:#2b3c58;
-}
-
-.request-item.active{
-    background:#0f1b2d;
 }
 
 .search-header.searched + .request-box{
     top:118px;
     left:40px;
     transform:none;
-    width:auto;
+    width:min(220px, calc(100vw - 80px));
     text-align:left;
 }
 
-.selected-request{
-    margin-top:12px;
+.search-header.searched + .request-box .request-summary{
+    display:none;
 }
 
-.selected-request.hidden{
-    display:none;
+.search-header.searched + .request-box .selected-request{
+    margin-top:0;
+    text-align:left;
 }
 
 @media (max-width:640px){
     .request-box{
-        top:50%;
+        top:56%;
         width:calc(100% - 32px);
     }
 
     .search-header.searched + .request-box{
         top:92px;
         left:16px;
+        width:calc(100% - 32px);
     }
 
-    .request-summary{
-        font-size:13px;
-        padding:10px 12px;
+    .request-card{
+        padding:20px;
     }
 
-    .request-list{
-        justify-content:flex-start;
-        flex-wrap:wrap;
+    .request-card-title{
+        font-size:20px;
     }
 }
 
@@ -702,20 +759,42 @@ body{
             </div>
         </div>
 
-        <div id="requestBox" class="request-box">
-    <div id="requestSummary" class="request-summary">
+   <div id="requestBox" class="request-box">
+    <button id="requestSummary" class="request-summary" type="button">
         <span class="bell">🔔</span>
         의뢰가 세 건 접수되었습니다.
+    </button>
+
+    <div id="requestCards" class="request-cards hidden">
+        <div class="request-card" data-route="의뢰1">
+            <div class="request-card-title">의뢰1</div>
+            <div class="request-card-preview">임시 의뢰 설명입니다.</div>
+        </div>
+
+        <div class="request-card" data-route="의뢰2">
+            <div class="request-card-title">의뢰2</div>
+            <div class="request-card-preview">임시 의뢰 설명입니다.</div>
+        </div>
+
+        <div class="request-card" data-route="의뢰3">
+            <div class="request-card-title">의뢰3</div>
+            <div class="request-card-preview">임시 의뢰 설명입니다.</div>
+        </div>
     </div>
 
-    <div id="requestList" class="request-list hidden">
-        <button class="request-item" type="button" data-route="의뢰1">의뢰1</button>
-        <button class="request-item" type="button" data-route="의뢰2">의뢰2</button>
-        <button class="request-item" type="button" data-route="의뢰3">의뢰3</button>
+    <div id="requestDetail" class="request-detail hidden">
+        <div class="request-detail-inner">
+            <button id="requestBackBtn" class="back-btn" type="button">← 뒤로가기</button>
+            <div class="detail-card">
+                <div id="requestDetailTitle" class="detail-title"></div>
+                <div id="requestDetailBody" class="detail-body"></div>
+                <button id="requestAcceptBtn" class="request-accept-btn" type="button">의뢰 접수</button>
+            </div>
+        </div>
     </div>
 
     <div id="selectedRequest" class="selected-request hidden">
-        <button id="selectedRequestBtn" class="request-item active" type="button"></button>
+        <button id="selectedRequestBtn" class="request-selected-chip" type="button"></button>
     </div>
 </div>
         <div id="resultsArea" class="results-area"></div>
