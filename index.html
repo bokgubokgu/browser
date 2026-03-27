@@ -560,6 +560,14 @@ body{
     text-align:left;
 }
 
+.selected-request{
+    margin-top:12px;
+}
+
+.selected-request.hidden{
+    display:none;
+}
+
 @media (max-width:640px){
     .request-box{
         top:50%;
@@ -705,8 +713,11 @@ body{
         <button class="request-item" type="button" data-route="의뢰2">의뢰2</button>
         <button class="request-item" type="button" data-route="의뢰3">의뢰3</button>
     </div>
+
+    <div id="selectedRequest" class="selected-request hidden">
+        <button id="selectedRequestBtn" class="request-item active" type="button"></button>
+    </div>
 </div>
-        
         <div id="resultsArea" class="results-area"></div>
 
         <div id="detailView" class="detail-view">
