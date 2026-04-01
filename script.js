@@ -190,7 +190,7 @@ currentResults = currentArticles.filter(article => matchesQuery(article, query))
 
 function openDetail(article){
     detailTitle.textContent = article.title;
-    detailBody.textContent = article.body;
+    detailBody.innerHTML = article.body;
     resultsArea.classList.remove("show");
 
     setTimeout(() => {
