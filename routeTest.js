@@ -12,9 +12,8 @@ const routeTestArticles = [
     {
         keyword: ["집", "귀가"],
         title: "귀가시간",
-        body: '6시에 귀가한다. 집에 오면서 <br><br> 
-        <a herf="https://x.com/milu1042667" target="_blank">SNS
-        </a>
-        를 주로 한다.'
-    },
+        body: `6시에 귀가한다. 집에 오면서 <br><br>
+    <a href="https://x.com/milu1042667" target="_blank" rel="noopener noreferrer">SNS</a>
+    를 주로 한다.`
+    }
 ];
