@@ -1,0 +1,7 @@
+const routeTestArticles = [
+    {
+        keyword: ["아무거나", "테스트"],
+        title: "테스트 기사",
+        body: "테스트 루트 전용 임시텍스트"
+    }
+];
