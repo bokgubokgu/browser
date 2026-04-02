@@ -156,7 +156,7 @@ function renderResults(list){
     resultsArea.innerHTML = list.map((item, index) => `
         <div class="result-card" data-index="${index}">
             <div class="result-title">${escapeHtml(item.title)}</div>
-            <div class="result-preview">${escapeHtml(item.body)}</div>
+            <div class="result-preview">${escapeHtml(item.body.replaceAll("<br>", " "))}</div>
         </div>
     `).join("");
 
