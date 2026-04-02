@@ -292,7 +292,7 @@ function openRequestDetail(route){
     pendingRoute = route;
     requestCards.classList.add("hidden");
     requestDetailTitle.textContent = route;
-    requestDetailBody.textContent = requestInfo[route] || "임시 의뢰 내용입니다.";
+    requestDetailBody.innerHTML = requestInfo[route] || "임시 의뢰 내용입니다.";
     requestDetail.classList.remove("hidden");
 }
 
